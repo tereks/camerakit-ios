@@ -80,10 +80,14 @@ extension CKFSession.FlashMode {
     }
     
     let photoOutput = AVCapturePhotoOutput()
+    let sessionPreset: AVCaptureSession.Preset
     
     var faceDetectionBoxes: [UIView] = []
     
-    @objc public init(position: CameraPosition = .back, detection: CameraDetection = .none) {
+    @objc public init(position: CameraPosition = .back,
+                      detection: CameraDetection = .none,
+                      sessionPreset: AVCaptureSession.Preset = .high) {
+        self.sessionPreset = sessionPreset
         super.init()
         
         defer {
@@ -91,7 +95,7 @@ extension CKFSession.FlashMode {
             self.cameraDetection = detection
         }
         
-        self.session.sessionPreset = .high
+        self.session.sessionPreset = sessionPreset
         self.session.addOutput(self.photoOutput)
     }
     
@@ -159,7 +163,7 @@ extension CKFSession.FlashMode {
                 {
                     deviceInput.device.activeFormat = format
                 } else {
-                    self.session.sessionPreset = .high
+                    self.session.sessionPreset = sessionPreset
                 }
                 
                 deviceInput.device.unlockForConfiguration()
